@@ -6,26 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-         Schema::create('users', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email')->unique();
-    $table->string('password');
-    $table->text('bio')->nullable();
-    $table->string('city')->nullable();
-    $table->string('country')->nullable();
-    $table->json('availability')->nullable();
-    $table->json('skills_offered')->nullable();
-    $table->json('skills_needed')->nullable();
-    $table->string('profile_picture')->nullable();
-    $table->unsignedInteger('token_balance')->default(0);
-    $table->timestamps();
-});
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->text('bio')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->json('availability')->nullable();
+            $table->json('skills_offered')->nullable();
+            $table->json('skills_needed')->nullable();
+            $table->string('profile_picture')->nullable();
+            $table->unsignedInteger('token_balance')->default(0);
+            $table->timestamp('email_verified_at')->nullable(); // 
+            $table->boolean('profile_completed')->default(false);
+           
+            $table->timestamps();
+        });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -43,9 +43,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');

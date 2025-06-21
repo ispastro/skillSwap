@@ -26,4 +26,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'skills_offered' => 'array',
         'skills_needed' => 'array',
     ];
+
+    public function hasCompletedProfile():boolval{
+        return $this->bio
+            && $this->city
+            && $this->country
+            && is_array($this->skills_offered) && count($this->skills_offered) > 0
+            && is_array($this->skills_needed) && count($this->skills_needed) > 0
+            && $this->profile_picture
+            && $this->profile_completed;
+    }
 }

@@ -35,12 +35,19 @@ return [
     |
     */
 
+    
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+    
+    // Add this API guard
+    'api' => [
+        'driver' => 'sanctum',
+        'provider' => 'users',
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------

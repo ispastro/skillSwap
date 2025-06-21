@@ -62,7 +62,25 @@ class UsersController extends Controller
     public function update(UpdateProfileRequest $request, User $user)
     {
         $this->authorize('update', $user);
+
+
+
+
         $user->update($request->validated());
+
+
+        // Check if the profile is fully completed now
+    if (
+        $user->bio &&
+        $user->city &&
+        $user->country &&
+        is_array($user->skills_offered) && count($user->skills_offered) > 0 &&
+        is_array($user->skills_needed) && count($user->skills_needed) > 0 &&
+        $user->profile_picture
+    ) {
+        $user->profile_completed = true;
+        $user->save();
+    }
         return new UserResource($user);
     }
 
@@ -94,17 +112,30 @@ class UsersController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function uploadProfilePicture(UploadProfilePictureRequest $request, User $user)
-    {
-        $this->authorize('update', $user);
+{
+    $this->authorize('update', $user);
 
-        // Delete existing picture if present
-        if ($user->profile_picture) {
-            Storage::disk('public')->delete($user->profile_picture);
-        }
-
-        $path = $request->file('image')->store('profile_pictures', 'public');
-        $user->update(['profile_picture' => $path]);
-
-        return new UserResource($user);
+    if ($user->profile_picture) {
+        Storage::disk('public')->delete($user->profile_picture);
     }
+
+    $path = $request->file('image')->store('profile_pictures', 'public');
+    $user->update(['profile_picture' => $path]);
+
+    //  Optional: check if this completes the profile
+    if (
+        $user->bio &&
+        $user->city &&
+        $user->country &&
+        is_array($user->skills_offered) && count($user->skills_offered) > 0 &&
+        is_array($user->skills_needed) && count($user->skills_needed) > 0 &&
+        $user->profile_picture
+    ) {
+        $user->profile_completed = true;
+        $user->save();
+    }
+
+    return new UserResource($user);
+}
+
 }
